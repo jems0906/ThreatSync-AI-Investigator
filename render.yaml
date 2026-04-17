@@ -12,11 +12,6 @@ services:
         fromDatabase:
           name: threatsync-postgres
           property: connectionString
-      - key: REDIS_URL
-        fromService:
-          type: redis
-          name: threatsync-redis
-          property: connectionString
       - key: OPENAI_API_KEY
         sync: false          # set manually in Render dashboard
       - key: OPENAI_MODEL
@@ -39,13 +34,6 @@ services:
         value: "7.0"
       - key: RAG_TOP_K
         value: "5"
-  # ── Redis ─────────────────────────────────────────────────────
-  - type: redis
-    name: threatsync-redis
-    region: oregon
-    plan: free
-    maxmemoryPolicy: allkeys-lru
-    ipAllowList: []
 
 databases:
   # ── PostgreSQL ────────────────────────────────────────────────
