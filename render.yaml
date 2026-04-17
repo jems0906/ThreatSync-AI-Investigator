@@ -9,9 +9,7 @@ services:
     healthCheckPath: /health
     envVars:
       - key: DATABASE_URL
-        fromDatabase:
-          name: threatsync-postgres
-          property: connectionString
+        sync: false          # paste your existing Render Postgres internal URL here
       - key: OPENAI_API_KEY
         sync: false          # set manually in Render dashboard
       - key: OPENAI_MODEL
@@ -35,10 +33,3 @@ services:
       - key: RAG_TOP_K
         value: "5"
 
-databases:
-  # ── PostgreSQL ────────────────────────────────────────────────
-  - name: threatsync-postgres
-    region: oregon
-    plan: free
-    databaseName: threatsync
-    user: threatsync
