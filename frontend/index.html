@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ThreatSync AI Investigator</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────────────────────────────────── -->
+<header>
+  <div class="logo">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      <path d="m9 12 2 2 4-4"/>
+    </svg>
+    ThreatSync AI Investigator
+  </div>
+  <div class="status-pills">
+    <div class="pill" id="pill-api">
+      <div class="dot"></div> API
+    </div>
+    <div class="pill" id="pill-redis">
+      <div class="dot"></div> Redis
+    </div>
+    <div class="pill" id="pill-rag">
+      <div class="dot"></div> RAG
+    </div>
+    <div class="pill" id="pill-approvals">
+      <div class="dot"></div>
+      <span id="pending-count">0</span> Pending
+    </div>
+  </div>
+</header>
+
+<!-- ── Three-column layout ─────────────────────────────────────────────────── -->
+<div class="layout">
+
+  <!-- ── Left: Alert Queue ──────────────────────────────────────────────────── -->
+  <div class="panel" id="left-panel">
+    <div class="panel-header">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      Alert Queue
+      <span class="badge" id="alert-count-badge">0</span>
+      <button id="btn-refresh" class="btn-refresh" title="Refresh alerts">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+        </svg>
+      </button>
+    </div>
+    <div class="panel-body" id="alert-list">
+      <div class="empty-state">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span>Loading alerts…</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Center: Investigation Stream ──────────────────────────────────────── -->
+  <div class="panel" id="center-panel">
+    <div class="investigation-area">
+      <div class="stream-toolbar">
+        <h3 id="stream-title">Select an alert to investigate</h3>
+        <button id="btn-investigate" disabled>
+          &#9654; Investigate
+        </button>
+      </div>
+      <div id="investigate-auth-warn" class="hidden"></div>
+
+      <div class="stream-body" id="stream-body">
+        <div class="empty-state">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <span>Click an alert, then press <strong>Investigate</strong></span>
+          <span class="stream-subtext">The AI analyst will stream its findings in real time</span>
+        </div>
+      </div>
+
+      <!-- Structured result is injected here -->
+      <div id="result-area"></div>
+    </div>
+  </div>
+
+  <!-- ── Right: Results + Approval Queue ───────────────────────────────────── -->
+  <div class="panel" id="right-panel">
+    <div class="panel-header">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2"><polyline points="9 11 12 14 22 4"/>
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+      </svg>
+      Approval Queue
+      <span class="badge" id="approval-badge">0</span>
+    </div>
+    <div class="panel-body right-body">
+      <div class="security-card" id="security-panel">
+        <div class="security-head">Security Config</div>
+        <label class="security-label" for="service-api-key">Service API Key</label>
+        <div class="security-input-row">
+          <input id="service-api-key" type="password" autocomplete="off" placeholder="service key" />
+          <button id="btn-toggle-service-key" type="button" class="security-mini-btn">Show</button>
+        </div>
+
+        <label class="security-label" for="analyst-api-key">Analyst API Key</label>
+        <div class="security-input-row">
+          <input id="analyst-api-key" type="password" autocomplete="off" placeholder="analyst key" />
+          <button id="btn-toggle-analyst-key" type="button" class="security-mini-btn">Show</button>
+        </div>
+
+        <div class="security-actions">
+          <button id="btn-auth-apply" type="button">Apply</button>
+          <button id="btn-auth-save" type="button">Save</button>
+          <button id="btn-auth-clear" type="button">Clear</button>
+          <button id="btn-auth-test" type="button">Test Auth</button>
+        </div>
+        <div id="security-status">Auth mode: no keys loaded (open mode)</div>
+        <div id="security-test-result">Auth test: not run</div>
+      </div>
+
+      <div id="approval-list" class="approval-list">
+        <div class="empty-state" id="approval-empty">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <span>No pending approvals</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

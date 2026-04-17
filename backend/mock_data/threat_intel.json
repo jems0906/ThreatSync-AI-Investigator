@@ -1,0 +1,66 @@
+[
+  {
+    "category": "brute_force",
+    "description": "Brute force and password spray attacks target authentication services like VPN, RDP, SSH, and web portals. Attackers use automated tools to try thousands of username/password combinations. Indicators include: high failure counts from single IPs, geolocation anomalies, use of libraries like libcurl or Python requests as user agents, targeting of multiple usernames in sequence. Common tools: Hydra, Medusa, CrackMapExec. Mitigation: MFA, account lockout, geo-blocking, rate limiting.",
+    "iocs": ["libcurl user-agent", "failure_count > 20 in 5 minutes", "multiple usernames from single IP", "known Tor exit nodes", "Shodan-indexed IPs"],
+    "mitre_tactics": ["T1110 - Brute Force", "T1110.003 - Password Spraying", "T1078 - Valid Accounts"],
+    "severity": "high",
+    "source": "CrowdStrike Threat Intelligence"
+  },
+  {
+    "category": "malware_c2",
+    "description": "Remote Access Trojans (RATs) and backdoors establish command-and-control (C2) communication channels after infection. Common delivery via phishing emails with malicious attachments. Process injection techniques are used to masquerade as legitimate processes (e.g., svchost.exe). C2 channels use ports 4444, 8080, 443. Parent-child process anomalies (e.g., outlook.exe spawning cmd.exe or svchost.exe) are strong indicators. File hashes and process paths should be checked against threat intel.",
+    "iocs": ["svchost.exe in Temp directory", "outlook.exe spawning shells", "port 4444 outbound", "Cobalt Strike beacon signatures", "Metasploit framework patterns"],
+    "mitre_tactics": ["T1566 - Phishing", "T1055 - Process Injection", "T1071 - Application Layer Protocol", "T1059 - Command and Scripting Interpreter"],
+    "severity": "critical",
+    "source": "MITRE ATT&CK"
+  },
+  {
+    "category": "insider_threat",
+    "description": "Insider threats involve malicious or negligent employees exfiltrating sensitive data before departure or for personal gain. Key indicators: access to files outside normal job function, large data transfers to external services (Dropbox, Google Drive, personal email), USB device usage, accessing HR or financial records. Context is critical — check if the user recently submitted a resignation, received a performance improvement plan, or has a history of policy violations. Data Loss Prevention (DLP) tools are essential.",
+    "iocs": ["access to C:\\HR\\ by non-HR users", "large HTTPS uploads to file-sharing domains", "USB drive insertion outside business hours", "accessing multiple sensitive files in short period"],
+    "mitre_tactics": ["T1052 - Exfiltration Over Physical Medium", "T1567 - Exfiltration Over Web Service", "T1078 - Valid Accounts", "T1530 - Data from Cloud Storage"],
+    "severity": "high",
+    "source": "CISA Insider Threat Guide"
+  },
+  {
+    "category": "apt28_tactics",
+    "description": "APT28 (Fancy Bear) is a Russian state-sponsored threat actor linked to GRU. Known for spear-phishing, credential harvesting, and DNS tunneling for C2 exfiltration. Uses custom implants like X-Agent and X-Tunnel. DNS tunneling involves high-entropy subdomains and abnormal query volumes. Targets government, defense, and critical infrastructure. Indicators: high DNS query rates, encoded subdomains, known C2 domains, use of Tor for anonymization.",
+    "iocs": ["high DNS query entropy (>4.0)", "subdomain length > 30 chars", "known APT28 C2 domains", "X-Agent malware signatures"],
+    "mitre_tactics": ["T1071.004 - DNS C2", "T1048 - Exfiltration Over Alternative Protocol", "T1566 - Phishing", "T1027 - Obfuscated Files"],
+    "severity": "critical",
+    "source": "Mandiant APT28 Report"
+  },
+  {
+    "category": "lateral_movement",
+    "description": "Lateral movement involves attackers traversing a network after initial compromise to reach high-value targets. SMB is commonly abused using tools like PsExec, WMI, and Pass-the-Hash. Indicators: abnormal SMB connections from a single host to many targets, access to admin shares (ADMIN$, C$, IPC$), use of service accounts in unusual contexts, tool artifacts from Sysinternals suite. Correlate with initial access events and privilege escalation.",
+    "iocs": ["psexec.exe usage", "wmic.exe remote execution", "admin$ share access", "single source connecting to >5 hosts in 15 min"],
+    "mitre_tactics": ["T1021.002 - SMB/Windows Admin Shares", "T1570 - Lateral Tool Transfer", "T1550.002 - Pass the Hash", "T1047 - Windows Management Instrumentation"],
+    "severity": "high",
+    "source": "SANS Threat Hunting Guide"
+  },
+  {
+    "category": "impossible_travel",
+    "description": "Impossible travel alerts fire when a user authenticates from two geographically distant locations in a timeframe that is physically impossible. This may indicate account compromise, credential theft, or use of a VPN/Tor to mask true location. Key context factors: Is the user a known traveler? Did they VPN from a known location? Was a new device fingerprint used? Tor exit node usage combined with impossible travel is a strong compromise indicator. Check for concurrent sessions.",
+    "iocs": ["Tor exit node IPs", "new device fingerprint", "geographic distance > 5000km in < 3 hours", "concurrent active sessions"],
+    "mitre_tactics": ["T1078 - Valid Accounts", "T1133 - External Remote Services", "T1090 - Proxy"],
+    "severity": "medium",
+    "source": "Microsoft Entra ID Threat Detection"
+  },
+  {
+    "category": "privilege_escalation",
+    "description": "Privilege escalation involves gaining higher access levels on a system. Windows techniques include token impersonation, DLL hijacking, exploiting unpatched vulnerabilities, and modifying registry run keys. CVE-2023-44487 (HTTP/2 Rapid Reset) and similar CVEs are commonly exploited. Key indicators: standard user processes spawning SYSTEM-level children, modifications to Winlogon registry, net localgroup administrator additions, whoami /priv usage. Check for exploit kit artifacts.",
+    "iocs": ["whoami /priv execution by standard users", "net localgroup administrators modification", "Winlogon registry changes", "UAC bypass techniques"],
+    "mitre_tactics": ["T1134 - Access Token Manipulation", "T1068 - Exploitation for Privilege Escalation", "T1547 - Boot or Logon Autostart Execution", "T1548 - Abuse Elevation Control Mechanism"],
+    "severity": "high",
+    "source": "NIST NVD + MITRE ATT&CK"
+  },
+  {
+    "category": "rdp_attack",
+    "description": "RDP (Remote Desktop Protocol) on port 3389 is a frequent attack vector. Internet-exposed RDP services are scanned and brute-forced continuously. Password spray attacks against domain administrator accounts are particularly dangerous as lockout policies may be more lenient. Successful RDP compromise gives full interactive access. Indicators: high authentication failures against port 3389, known scanning IP ranges, lockout triggered, off-hours timing.",
+    "iocs": ["port 3389 exposed to internet", "authentication failures > 100 in 30 min", "Shodan/Censys scanner IPs", "administrator account targeted"],
+    "mitre_tactics": ["T1110 - Brute Force", "T1021.001 - Remote Desktop Protocol", "T1078.002 - Domain Accounts"],
+    "severity": "critical",
+    "source": "FBI Cyber Division Advisory"
+  }
+]

@@ -1,0 +1,172 @@
+[
+  {
+    "alert_type": "login_failure",
+    "user_id": "john.doe@company.com",
+    "source_ip": "185.220.101.47",
+    "hostname": null,
+    "severity_hint": "high",
+    "occurred_at": "2026-04-15T14:23:00+00:00",
+    "raw_data": {
+      "event_type": "multiple_auth_failures",
+      "target_service": "vpn.company.com",
+      "failure_count": 47,
+      "time_window_minutes": 5,
+      "geo_location": "Minsk, Belarus",
+      "user_agent": "libcurl/7.81.0",
+      "attempted_usernames": ["john.doe", "j.doe", "johndoe", "admin"],
+      "protocol": "HTTPS",
+      "auth_type": "password"
+    }
+  },
+  {
+    "alert_type": "malware_detection",
+    "user_id": "mary.smith@company.com",
+    "source_ip": "10.0.1.42",
+    "hostname": "WKSTN-0042",
+    "severity_hint": "critical",
+    "occurred_at": "2026-04-15T15:47:00+00:00",
+    "raw_data": {
+      "event_type": "trojan_detected",
+      "process_name": "svchost.exe",
+      "process_path": "C:\\Users\\msmith\\AppData\\Local\\Temp\\svchost.exe",
+      "file_hash_md5": "d41d8cd98f00b204e9800998ecf8427e",
+      "file_hash_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "threat_name": "Trojan.GenericKD.47392817",
+      "antivirus_engine": "Defender ATP",
+      "network_connections": [
+        {"ip": "192.168.100.5", "port": 4444, "direction": "outbound"},
+        {"ip": "10.10.10.1", "port": 8080, "direction": "outbound"}
+      ],
+      "parent_process": "outlook.exe",
+      "command_line": "C:\\Users\\msmith\\AppData\\Local\\Temp\\svchost.exe -c 192.168.100.5:4444"
+    }
+  },
+  {
+    "alert_type": "data_exfiltration",
+    "user_id": "bob.johnson@company.com",
+    "source_ip": "10.0.2.15",
+    "hostname": "WKSTN-0015",
+    "severity_hint": "high",
+    "occurred_at": "2026-04-15T16:30:00+00:00",
+    "raw_data": {
+      "event_type": "large_data_transfer",
+      "destination_ip": "203.0.113.42",
+      "destination_port": 443,
+      "bytes_transferred": 2147483648,
+      "protocol": "HTTPS",
+      "destination_domain": "dropbox-secure-sync.net",
+      "files_accessed": [
+        "C:\\Projects\\Q4-Financial-Report.xlsx",
+        "C:\\Projects\\Customer-Database.csv",
+        "C:\\HR\\Employee-Salaries.xlsx"
+      ],
+      "transfer_duration_minutes": 45,
+      "user_role": "junior_analyst",
+      "normal_daily_upload_bytes": 52428800
+    }
+  },
+  {
+    "alert_type": "login_failure",
+    "user_id": "admin@company.com",
+    "source_ip": "45.33.32.156",
+    "hostname": "dc-01.company.local",
+    "severity_hint": "critical",
+    "occurred_at": "2026-04-15T02:15:00+00:00",
+    "raw_data": {
+      "event_type": "admin_brute_force",
+      "target_service": "RDP",
+      "target_port": 3389,
+      "failure_count": 312,
+      "time_window_minutes": 30,
+      "geo_location": "Krasnoyarsk, Russia",
+      "password_spray_indicators": true,
+      "lockout_triggered": true,
+      "attempted_passwords_count": 312,
+      "attack_pattern": "password_spray"
+    }
+  },
+  {
+    "alert_type": "lateral_movement",
+    "user_id": "service_account@company.com",
+    "source_ip": "10.0.1.100",
+    "hostname": "SERVER-WEB-01",
+    "severity_hint": "high",
+    "occurred_at": "2026-04-15T18:00:00+00:00",
+    "raw_data": {
+      "event_type": "abnormal_smb_activity",
+      "connections_in_15min": 28,
+      "normal_connections_baseline": 2,
+      "target_hosts": [
+        "10.0.1.101", "10.0.1.102", "10.0.1.103",
+        "10.0.2.10", "10.0.2.11", "10.0.3.5"
+      ],
+      "protocol": "SMB",
+      "shares_accessed": ["ADMIN$", "C$", "IPC$"],
+      "tool_signatures": ["psexec", "wmic"],
+      "credential_used": "service_account"
+    }
+  },
+  {
+    "alert_type": "anomalous_behavior",
+    "user_id": "alice.wong@company.com",
+    "source_ip": "185.220.101.90",
+    "hostname": null,
+    "severity_hint": "medium",
+    "occurred_at": "2026-04-15T03:45:00+00:00",
+    "raw_data": {
+      "event_type": "impossible_travel",
+      "previous_login_location": "San Francisco, CA, USA",
+      "previous_login_time": "2026-04-15T01:30:00+00:00",
+      "current_login_location": "Moscow, Russia",
+      "time_difference_minutes": 135,
+      "distance_km": 9365,
+      "speed_required_kmh": 4162,
+      "vpn_detected": false,
+      "tor_exit_node": true,
+      "device_fingerprint": "new_device"
+    }
+  },
+  {
+    "alert_type": "c2_communication",
+    "user_id": "charlie.brown@company.com",
+    "source_ip": "10.0.4.88",
+    "hostname": "WKSTN-0088",
+    "severity_hint": "critical",
+    "occurred_at": "2026-04-15T20:15:00+00:00",
+    "raw_data": {
+      "event_type": "dns_tunneling_detected",
+      "suspicious_domain": "a1b2c3d4e5f6.evil-c2-server.xyz",
+      "dns_query_count_per_hour": 1847,
+      "normal_dns_baseline_per_hour": 120,
+      "query_entropy": 4.8,
+      "encoded_data_detected": true,
+      "estimated_data_transferred_bytes": 524288,
+      "process_making_queries": "chrome.exe",
+      "pid": 4892,
+      "known_c2_domain": true,
+      "threat_actor": "APT28"
+    }
+  },
+  {
+    "alert_type": "privilege_escalation",
+    "user_id": "dave.miller@company.com",
+    "source_ip": "10.0.1.55",
+    "hostname": "WKSTN-0055",
+    "severity_hint": "high",
+    "occurred_at": "2026-04-15T11:20:00+00:00",
+    "raw_data": {
+      "event_type": "token_impersonation",
+      "original_privilege_level": "standard_user",
+      "escalated_to": "SYSTEM",
+      "technique": "token_impersonation",
+      "vulnerability_exploited": "CVE-2023-44487",
+      "process": "cmd.exe",
+      "parent_process": "explorer.exe",
+      "commands_executed": [
+        "whoami /priv",
+        "net localgroup administrators dave.miller /add",
+        "reg add HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon"
+      ]
+    }
+  }
+]

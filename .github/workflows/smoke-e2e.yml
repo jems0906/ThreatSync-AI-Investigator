@@ -1,0 +1,52 @@
+name: Smoke E2E
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: threatsync
+          POSTGRES_PASSWORD: threatsync
+          POSTGRES_DB: threatsync
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U threatsync"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql+asyncpg://threatsync:threatsync@localhost:5432/threatsync
+      REDIS_URL: redis://localhost:6379/0
+      OPENAI_API_KEY: sk-placeholder
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run end-to-end smoke test
+        working-directory: backend
+        run: python smoke_e2e.py

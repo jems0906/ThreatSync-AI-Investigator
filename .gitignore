@@ -1,0 +1,40 @@
+# ── Python ────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+dist/
+build/
+
+# ── Virtual environments ──────────────────────────────────────
+.venv/
+venv/
+env/
+
+# ── Secrets — NEVER commit these ──────────────────────────────
+.env
+
+# ── Local database / vector store data ───────────────────────
+backend/chroma_db/
+*.sqlite3
+
+# ── Docker ────────────────────────────────────────────────────
+.dockerignore
+
+# ── OS ────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Editors ───────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── Test / coverage artefacts ─────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/

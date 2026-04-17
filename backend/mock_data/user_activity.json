@@ -1,0 +1,31 @@
+[
+  {"user_id": "john.doe@company.com", "action": "login_success", "resource": "vpn.company.com", "source_ip": "203.0.113.10", "timestamp": "2026-04-14T09:00:00+00:00", "success": true, "geo_location": "Chicago, IL, USA"},
+  {"user_id": "john.doe@company.com", "action": "login_success", "resource": "vpn.company.com", "source_ip": "203.0.113.10", "timestamp": "2026-04-13T08:55:00+00:00", "success": true, "geo_location": "Chicago, IL, USA"},
+  {"user_id": "john.doe@company.com", "action": "login_failure", "resource": "vpn.company.com", "source_ip": "203.0.113.10", "timestamp": "2026-04-12T09:10:00+00:00", "success": false, "reason": "wrong_password"},
+  {"user_id": "john.doe@company.com", "action": "login_success", "resource": "portal.company.com", "source_ip": "203.0.113.10", "timestamp": "2026-04-14T10:30:00+00:00", "success": true},
+  {"user_id": "john.doe@company.com", "action": "file_access", "resource": "SharePoint://HR/Policies.pdf", "source_ip": "203.0.113.10", "timestamp": "2026-04-14T11:00:00+00:00", "success": true},
+
+  {"user_id": "mary.smith@company.com", "action": "login_success", "resource": "mail.company.com", "source_ip": "10.0.1.42", "timestamp": "2026-04-15T08:30:00+00:00", "success": true},
+  {"user_id": "mary.smith@company.com", "action": "email_open", "resource": "invoice_Q1_2026.pdf.exe", "source_ip": "10.0.1.42", "timestamp": "2026-04-15T15:43:00+00:00", "success": true, "note": "suspicious attachment opened"},
+  {"user_id": "mary.smith@company.com", "action": "process_create", "resource": "svchost.exe (from Temp)", "source_ip": "10.0.1.42", "timestamp": "2026-04-15T15:44:00+00:00", "success": true},
+  {"user_id": "mary.smith@company.com", "action": "network_connection", "resource": "192.168.100.5:4444", "source_ip": "10.0.1.42", "timestamp": "2026-04-15T15:45:00+00:00", "success": true},
+  {"user_id": "mary.smith@company.com", "action": "file_download", "resource": "https://raw.github-cdn.com/payload.bin", "source_ip": "10.0.1.42", "timestamp": "2026-04-14T14:00:00+00:00", "success": true},
+
+  {"user_id": "bob.johnson@company.com", "action": "login_success", "resource": "workstation", "source_ip": "10.0.2.15", "timestamp": "2026-04-15T07:45:00+00:00", "success": true},
+  {"user_id": "bob.johnson@company.com", "action": "file_access", "resource": "C:\\Projects\\Customer-Database.csv", "source_ip": "10.0.2.15", "timestamp": "2026-04-15T15:00:00+00:00", "success": true},
+  {"user_id": "bob.johnson@company.com", "action": "file_access", "resource": "C:\\HR\\Employee-Salaries.xlsx", "source_ip": "10.0.2.15", "timestamp": "2026-04-15T15:05:00+00:00", "success": true},
+  {"user_id": "bob.johnson@company.com", "action": "usb_insert", "resource": "USB Drive E:", "source_ip": "10.0.2.15", "timestamp": "2026-04-14T17:50:00+00:00", "success": true},
+  {"user_id": "bob.johnson@company.com", "action": "resignation_submitted", "resource": "HR System", "source_ip": "10.0.2.15", "timestamp": "2026-04-10T09:00:00+00:00", "success": true, "note": "2-week notice submitted"},
+
+  {"user_id": "alice.wong@company.com", "action": "login_success", "resource": "vpn.company.com", "source_ip": "203.0.113.55", "timestamp": "2026-04-15T01:30:00+00:00", "success": true, "geo_location": "San Francisco, CA, USA"},
+  {"user_id": "alice.wong@company.com", "action": "login_success", "resource": "vpn.company.com", "source_ip": "203.0.113.55", "timestamp": "2026-04-14T17:00:00+00:00", "success": true, "geo_location": "San Francisco, CA, USA"},
+  {"user_id": "alice.wong@company.com", "action": "api_call", "resource": "/api/v1/users/export", "source_ip": "203.0.113.55", "timestamp": "2026-04-14T17:05:00+00:00", "success": true},
+
+  {"user_id": "charlie.brown@company.com", "action": "login_success", "resource": "workstation", "source_ip": "10.0.4.88", "timestamp": "2026-04-15T09:00:00+00:00", "success": true},
+  {"user_id": "charlie.brown@company.com", "action": "dns_lookup", "resource": "accounts.google.com", "source_ip": "10.0.4.88", "timestamp": "2026-04-15T09:05:00+00:00", "success": true},
+  {"user_id": "charlie.brown@company.com", "action": "browser_download", "resource": "https://cdn.example.com/chrome-extension.crx", "source_ip": "10.0.4.88", "timestamp": "2026-04-15T19:55:00+00:00", "success": true},
+
+  {"user_id": "dave.miller@company.com", "action": "login_success", "resource": "workstation", "source_ip": "10.0.1.55", "timestamp": "2026-04-15T08:00:00+00:00", "success": true},
+  {"user_id": "dave.miller@company.com", "action": "file_access", "resource": "C:\\Windows\\System32\\cmd.exe", "source_ip": "10.0.1.55", "timestamp": "2026-04-15T11:15:00+00:00", "success": true},
+  {"user_id": "dave.miller@company.com", "action": "privilege_check", "resource": "whoami /priv", "source_ip": "10.0.1.55", "timestamp": "2026-04-15T11:18:00+00:00", "success": true}
+]

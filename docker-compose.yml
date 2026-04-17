@@ -1,0 +1,66 @@
+# ThreatSync AI Investigator — Docker Compose
+# Usage: docker compose up --build
+
+services:
+  # ── PostgreSQL ────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: threatsync-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: threatsync
+      POSTGRES_PASSWORD: threatsync
+      POSTGRES_DB: threatsync
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"  # mapped to 5434 to avoid conflict with any local PostgreSQL
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U threatsync"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis ─────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: threatsync-redis
+    restart: unless-stopped
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - redis_data:/data
+    # port not exposed externally — app connects via Docker internal network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── ThreatSync App ────────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: threatsync-app
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://threatsync:threatsync@postgres:5432/threatsync
+      REDIS_URL: redis://redis:6379/0
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./backend:/app/backend
+      - ./frontend:/app/frontend
+      - chroma_data:/app/backend/chroma_db
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  redis_data:
+  chroma_data:
